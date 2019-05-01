@@ -1,4 +1,5 @@
 import scrapper
+import dic
 
 
 def tot_don_sum(a, b, c, d, e, f, g, h):
@@ -130,15 +131,51 @@ def cons_don_sum(a, b, c, d, e, f, g, h):
         return tot
     return [eighteen(a), sixteen(b), fourteen(c), twelve(d), ten(e), eight(f), six(g), four(h)]
 
+def collect_year(year_data):
+    dictionary = dict(dic.dictionary)
+    for k in dictionary.keys():
+        dictionary[k] = [0, 0]
+    for donation in year_data:
+        state = get_state(donation)
+        dictionary[state][0] += int(donation[2])
+        dictionary[state][1] += int(donation[3])
+    return dictionary
+
+
+def get_state(donation):
+    address = donation[4]
+    return address.split(", ")[1]
 
 def main():
-    data = [scrapper.twenty_eighteen(), scrapper.twenty_sixteen(), scrapper.twenty_fourteen(), scrapper.twenty_twelve(), scrapper.twenty_ten(), scrapper.twenty_eight(), scrapper.twenty_six(), scrapper.twenty_four()]
-    tot_trend_list = tot_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
-    lib_trend_list = lib_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
-    cons_trend_list = cons_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
-    print(tot_trend_list)
-    print(lib_trend_list)
-    print(cons_trend_list)
+    data = [] #noded data
+    address =[] #address in data
+    def data_getter():
+        data = []
+        for i in ['https://www.opensecrets.org/outsidespending/summ.php?cycle=2018&disp=D&type=V&superonly=N','https://www.opensecrets.org/outsidespending/summ.php?cycle=2016&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2014&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2012&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2010&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2008&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2006&disp=D&type=V&superonly=N', 'https://www.opensecrets.org/outsidespending/summ.php?cycle=2004&disp=D&type=V&superonly=N']:
+            data.append(scrapper.get_data(i))
+        return data
+    def get_address(data):
+        count = 0
+        address = []
+        for node in data:
+            address.append([])
+            for entry in node:
+                address[-1].append(entry[4])
+        return address
+
+    data = data_getter()
+    address = get_address(data)
+
+    for d in data:
+        print(collect_year(d))
+    
+    #tot_trend_list = tot_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+    #lib_trend_list = lib_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+    #cons_trend_list = cons_don_sum(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+    #print(tot_trend_list)
+    #print(lib_trend_list)
+    #print(cons_trend_list)
+    #print(address)
 
 
 main()
