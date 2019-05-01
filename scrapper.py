@@ -46,7 +46,15 @@ def get_data(link):
 
         return map(name_array, tot_don, cons_don, lib_don, address)
 
+def get_year(year):
+    url = 'https://www.opensecrets.org/outsidespending/summ.php?cycle=' + str(year) + '&disp=D&type=V&superonly=N'
+    name_array = []
+    tot_don = []
+    cons_don = []
+    lib_don = []
+
+    return url
+
+""" Get the address given a tr entry """
 def get_address(entry):
     return entry.find_all('td')[1].contents[4]
-
-
